@@ -1,0 +1,7 @@
+app:
+  datasource:
+    jdbc-url: jdbc:postgresql://localhost:5432/notificationdb
+    driver: org.postgresql.Driver
+    username: postgres
+    password: blood
+    pool-size: 30   
