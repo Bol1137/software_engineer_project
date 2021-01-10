@@ -34,7 +34,7 @@ public class NotificationController {
 
     if(channel.equalsIgnoreCase("sms")) {
         return new NotificationTemplate((int) counter.incrementAndGet(), String.format(channelTemplate, channel), String.format(SmsTemplate, name, item), lang);
-        
+
     }else
         return new NotificationTemplate((int)counter.incrementAndGet(), String.format(channelTemplate, channel),String.format(mailTemplate, name), lang);
 
