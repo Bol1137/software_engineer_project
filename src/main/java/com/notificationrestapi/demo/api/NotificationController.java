@@ -9,20 +9,45 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping("api/notification")
 public class NotificationController {
+  private static final String channelTemplate = " %s";
+  private static   final String SmsTemplate ="Hey %s, your booking for item %S is complete successfully";
+  private static final String mailTemplate = "Hey %s, Thank you for signing up to my weekly newsletter.";
+  private static   final String lang = "English";
+  private   final AtomicLong counter = new AtomicLong();
+
+
+
     NotificationRepository notificationRepository;
     @Autowired
     public NotificationController(NotificationRepository notificationRepository) {
         this.notificationRepository = notificationRepository;
     }
+
+    @GetMapping
+    public NotificationTemplate getNotification(@RequestParam(value = "channel", defaultValue = "empty") String channel
+    , @RequestParam(value = "name", defaultValue = "user")String name, @RequestParam(value = "item", defaultValue = "x") String item){
+
+    if(channel.equalsIgnoreCase("sms")) {
+        return new NotificationTemplate((int) counter.incrementAndGet(), String.format(channelTemplate, channel), String.format(SmsTemplate, name, item), lang);
+        
+    }else
+        return new NotificationTemplate((int)counter.incrementAndGet(), String.format(channelTemplate, channel),String.format(mailTemplate, name), lang);
+
+    }
+    /*
     @GetMapping
     public List<NotificationTemplate> getAllNotifications(){
+
         List<NotificationTemplate> allNotifications = notificationRepository.findAll();
         return allNotifications;
     }
+
+     */
     @GetMapping("/{id}")
     public NotificationTemplate getNotificationById(@PathVariable(value = "id") Integer templateId){
         NotificationTemplate notification = notificationRepository.findById(templateId).get();
